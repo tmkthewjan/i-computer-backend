@@ -1,7 +1,6 @@
 import express from "express";
 import mongoose from "mongoose";
 import dns from "dns";
-import studentRouter from './routers/studentRouter.js'
 import userRouter from './routers/userRouter.js'
 import jwt from "jsonwebtoken";
 import { decode } from "punycode";
@@ -25,7 +24,7 @@ app.use( express.json() )
 app.use(authenticate)
     
 
-app.use("/students",studentRouter)
+
 app.use("/users" , userRouter)
 app.use("/products", productRouter)
 
