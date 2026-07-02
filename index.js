@@ -6,13 +6,12 @@ import jwt from "jsonwebtoken";
 import { decode } from "punycode";
 import authenticate from "./middlewares/authenticate.js";
 import productRouter from "./routers/productRouter.js";
-
-
-
+import dotenv from "dotenv";
+dotenv.config()
 
 
 dns.setServers(["1.1.1.1", "8.8.8.8"]);
-const mongoDBURI="mongodb+srv://admin:1234@cluster0.drm5o6c.mongodb.net/?appName=Cluster0"
+const mongoDBURI=process.env.MONGO_URI
 
 mongoose.connect(mongoDBURI).then(()=>{
     console.log("connected to mongoDB");
