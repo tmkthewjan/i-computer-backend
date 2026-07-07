@@ -1,36 +1,39 @@
 import express from "express";
 import mongoose from "mongoose";
 import dns from "dns";
-import userRouter from './routers/userRouter.js'
-import jwt from "jsonwebtoken";
-import { decode } from "punycode";
-import authenticate from "./middlewares/authenticate.js";
-import productRouter from "./routers/productRouter.js";
+import cors from "cors";
 import dotenv from "dotenv";
-dotenv.config()
 
+import userRouter from "./routers/userRouter.js";
+import productRouter from "./routers/productRouter.js";
+import authenticate from "./middlewares/authenticate.js";
+
+dotenv.config();
 
 dns.setServers(["1.1.1.1", "8.8.8.8"]);
-const mongoDBURI=process.env.MONGO_URI
 
-mongoose.connect(mongoDBURI).then(()=>{
-    console.log("connected to mongoDB");
-})
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => {
+    console.log("Connected to MongoDB");
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 
-const app = express()
+const app = express();
 
-app.use( express.json() )
-app.use(authenticate)
-    
+app.use(cors());
+app.use(express.json());
 
+// Public Routes
+app.use("/users", userRouter);
 
-app.use("/users" , userRouter)
-app.use("/products", productRouter)
+// Protected Routes
+app.use(authenticate);
+app.use("/products", productRouter);
 
-app.listen(
-    3000 ,
-    ()=>{
-        console.log('Server started successfully')
-        console.log('Listening on port 3000')
-    }
-)
+app.listen(3000, () => {
+  console.log("Server started successfully");
+  console.log("Listening on port 3000");
+});
